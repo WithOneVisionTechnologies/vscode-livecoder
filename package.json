@@ -1,26 +1,77 @@
 {
 	"name": "livecoder",
 	"displayName": "LiveCoder",
-	"description": "Types out code for you in live coding sessions",
+	"description": "Types out code for you in live coding sessions (forked from 'auto-type')",
 	"version": "0.0.1",
+	"publisher": "with-one-vision",
+	"preview": true,
 	"engines": {
 		"vscode": "^1.45.0"
 	},
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+		"With One Vision",
+		"Live Code",
+		"Auto Type"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WithOneVisionTechnologies/vscode-livecoder"
+	},
 	"activationEvents": [
-		"onCommand:livecoder.helloWorld"
+		"onCommand:livecoder.playAllScripts",
+		"onCommand:livecoder.playNextScript",
+		"onCommand:livecoder.playNextNScripts",
+		"onCommand:livecoder.playRemainingScripts",
+		"onCommand:livecoder.playSpecificScript",
+		"onCommand:livecoder.resetScriptQueue"
 	],
 	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "livecoder.helloWorld",
-				"title": "Hello World"
+    "contributes": {
+		"configuration": {
+			"title": "Live Coder",
+			"properties": {
+				"livecoder.settings.scriptDirectory": {
+					"type": "string",
+					"default": "/.liveCoder",
+					"description": "Path (from root of workspace with leading slash) containing scripts to play"
+				},
+				"livecoder.settings.tyingDelay": {
+					"type": "number",
+					"default": 250,
+					"description": "Delay (in milliseconds) between keystrokes."
+				}
 			}
-		]
-	},
+		},
+        "commands": [
+			{
+                "command": "livecoder.playAllScripts",
+                "title": "Play All Scripts (From Beginning)"
+            },
+			{
+                "command": "livecoder.playNextScript",
+                "title": "Play Next Script"
+			},
+			{
+                "command": "livecoder.playNextNScripts",
+                "title": "Play Next <#> Scripts"
+			},
+			{
+                "command": "livecoder.playRemainingScripts",
+                "title": "Play Remaining Scripts"
+			},
+			{
+                "command": "livecoder.playSpecificScript",
+                "title": "Play Specific Script"
+            },
+            {
+                "command": "livecoder.resetScriptQueue",
+                "title": "Restart Script Queue"
+            }
+        ]
+    },
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
@@ -30,16 +81,16 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.45.0",
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.2",
-		"@types/node": "^13.11.0",
-		"eslint": "^6.8.0",
-		"@typescript-eslint/parser": "^2.30.0",
-		"@typescript-eslint/eslint-plugin": "^2.30.0",
-		"glob": "^7.1.6",
-		"mocha": "^7.1.2",
-		"typescript": "^3.8.3",
-		"vscode-test": "^1.3.0"
+		"@types/vscode": "1.45.0",
+		"@types/glob": "7.1.1",
+		"@types/mocha": "7.0.2",
+		"@types/node": "14.0.1",
+		"eslint": "7.0.0",
+		"@typescript-eslint/parser": "2.33.0",
+		"@typescript-eslint/eslint-plugin": "2.33.0",
+		"glob": "7.1.6",
+		"mocha": "7.1.2",
+		"typescript": "3.9.2",
+		"vscode-test": "1.3.0"
 	}
 }

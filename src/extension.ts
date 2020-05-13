@@ -1,27 +1,58 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import ExtensionStore from "./stores/ExtensionStore";
+import { ResetScriptQueueCommand } from "./commands/ResetScriptQueueCommand";
+import { PlayNextScriptCommand } from "./commands/PlayNextScriptCommand";
+import { PlayAllScriptsCommand } from "./commands/PlayAllScriptsCommand";
+import { PlayRemainingScriptsCommand } from "./commands/PlayRemainingScriptsCommand";
+import { PlayNextNScriptsCommand } from "./commands/PlayNextNScriptsCommand";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+// Activate function
+
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "livecoder" is now active!');
+	/******************* SETUP *******************/
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('livecoder.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+	// Get configs
+	let typingDelaySetting: number | undefined = vscode.workspace.getConfiguration("livecoder").get<number>("settings.tyingDelay");
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from LiveCoder!');
-	});
+	if (typingDelaySetting === undefined) {
+		ExtensionStore.typingDelaySetting = 250;
+	} else {
+		ExtensionStore.typingDelaySetting = typingDelaySetting;
+	}
 
-	context.subscriptions.push(disposable);
+	let scriptDirectorySetting: string | undefined = vscode.workspace.getConfiguration("livecoder").get<string>("settings.scriptDirectory");
+
+	if (scriptDirectorySetting === undefined) {
+		ExtensionStore.scriptDirectorySetting = "/.liveCoder";
+	} else {
+		ExtensionStore.scriptDirectorySetting = scriptDirectorySetting;
+	}
+
+	/******************* COMMANDS *******************/
+
+	//////// Play All Scripts
+	let playAllScriptsCommand: PlayAllScriptsCommand = new PlayAllScriptsCommand();
+	playAllScriptsCommand.setup(context);
+
+	//////// Play Next Script
+	let playNextScriptCommand: PlayNextScriptCommand = new PlayNextScriptCommand();
+	playNextScriptCommand.setup(context);
+
+	//////// Play Next <#> Scripts
+	let playNextNScriptsCommand: PlayNextNScriptsCommand = new PlayNextNScriptsCommand();
+	playNextNScriptsCommand.setup(context);
+
+	//////// Play Remaining Scripts
+	let playRemainingScriptsCommand: PlayRemainingScriptsCommand = new PlayRemainingScriptsCommand();
+	playRemainingScriptsCommand.setup(context);
+
+	//////// Reset Script Queue
+	let resetScriptCounterCommand: ResetScriptQueueCommand = new ResetScriptQueueCommand();
+	resetScriptCounterCommand.setup(context);
+
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+// Deactivate function
+
+export function deactivate() { }
