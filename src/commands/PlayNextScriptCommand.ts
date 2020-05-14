@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ExtensionService } from "../services/ExtensionService";
-import { ParsedScript } from "../models/ParsedScript";
+import { Script } from "../models/Script";
 import { ExtensionSettings } from "../models/ExtensionSettings";
 import { ExtensionConstants } from "../models/ExtensionConstants";
 
@@ -12,7 +12,7 @@ export class PlayNextScriptCommand {
     
             let extensionService: ExtensionService = new ExtensionService();
             let extensionSettings: ExtensionSettings = new ExtensionSettings();
-            let scripts: ParsedScript[] = [];
+            let scripts: Script[] = [];
     
             try {
                 scripts = extensionService.loadScripts();
@@ -21,13 +21,17 @@ export class PlayNextScriptCommand {
                 vscode.window.showErrorMessage(`Error ${e} while trying to load scripts`);
                 return;
             }
+
+            if (scripts.length === 0) {
+                vscode.window.showErrorMessage(`No scripts have been loaded`);
+            }
     
             if (extensionSettings.currentQueuePosition >= scripts.length) {
                 vscode.window.showInformationMessage("No more scripts");
                 return;
             }
     
-            let script: ParsedScript = scripts[extensionSettings.currentQueuePosition];
+            let script: Script = scripts[extensionSettings.currentQueuePosition];
             await extensionSettings.incrementCurrentQueuePosition();
             
             try {

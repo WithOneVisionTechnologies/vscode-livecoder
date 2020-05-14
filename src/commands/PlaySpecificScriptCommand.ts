@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { ExtensionService } from "../services/ExtensionService";
-import { ParsedScript } from "../models/ParsedScript";
+import { Script } from "../models/Script";
 import { ExtensionConstants } from "../models/ExtensionConstants";
 
 export class PlaySpecificScriptCommand {
@@ -18,7 +18,7 @@ export class PlaySpecificScriptCommand {
                 return;
             }
 
-            let scripts: ParsedScript[] = [];
+            let scripts: Script[] = [];
 
             try {
                 scripts = extensionService.loadScripts();
@@ -28,7 +28,11 @@ export class PlaySpecificScriptCommand {
                 return;
             }
 
-            let foundScripts: ParsedScript[] = scripts.filter((script) => script.name === inputBox);
+            if (scripts.length === 0) {
+                vscode.window.showErrorMessage(`No scripts have been loaded`);
+            }
+
+            let foundScripts: Script[] = scripts.filter((script) => script.name === inputBox);
 
             if (foundScripts.length === 0) {
                 vscode.window.showErrorMessage(`No script was found in your script directory with the name ${inputBox}`);

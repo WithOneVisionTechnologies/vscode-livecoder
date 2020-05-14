@@ -4,34 +4,45 @@ import { ScriptOptions } from "./ScriptOptions";
 import { ExtensionSettings } from "./ExtensionSettings";
 import { ExtensionService } from "../services/ExtensionService";
 
-export class ParsedScript {
-    public options: ScriptOptions;
-    public name: string;
-    public path: string;
-    public content: string;
+export class Script {
+    public options: ScriptOptions = new ScriptOptions();
+    public name: string = "";
+    public path: string = "";
+    public content: string = "";
 
     private extensionService: ExtensionService = new ExtensionService();
 
     constructor(scriptName: string) {
+
+        if (this.extensionService.getFullScriptDirectory() === "") {
+            vscode.window.showErrorMessage("No workspace or folders currently open");
+            return;
+        }
 
         let scriptPath: string = `${this.extensionService.getFullScriptDirectory()}/${scriptName}`;
         let fullContent: string = fs.readFileSync(scriptPath, { encoding: "utf-8" });
         let contentParts: string[] = fullContent.split(/\n\-\-\-\n/m);
 
         try {
-            this.options = new ScriptOptions(contentParts[0]);
-            this.content = contentParts[1];
+
+            if (contentParts.length === 1) {
+                this.content = contentParts[0];
+            } else {
+                this.options.parse(contentParts[0]);
+                this.content = contentParts[1];
+            }
+
             this.name = scriptName;
             this.path = scriptPath;
         }
         catch (e) {
             vscode.window.showErrorMessage(`Error ${e} while trying to parse options in script ${scriptPath}`);
-            throw new Error(`Error ${e} while trying to parse options in script ${scriptPath}`);
+            return;
         }
 
         if (this.options.file !== "" && !fs.existsSync(this.options.file) && !fs.existsSync(`${this.extensionService.getFullScriptDirectory()}/../${this.options.file}`)) {
             vscode.window.showErrorMessage(`Can"t find target file ${this.options.file}`);
-            throw new Error(`Can"t find target file ${this.options.file}`);
+            return;
         }
     }
 
@@ -85,7 +96,7 @@ export class ParsedScript {
                 return;
             }
 
-            let range = activeDoc.lineAt(this.options.line).range;
+            let range = activeDoc.lineAt(0).range;
             editor.selection = new vscode.Selection(range.start, range.end);
             editor.revealRange(range, this.options.getTextEditorRevealType());
 
@@ -168,8 +179,15 @@ export class ParsedScript {
             }
         }).then(() => {
             let extensionSettings: ExtensionSettings = new ExtensionSettings();
+
+            let typingDelay: number = extensionSettings.typingDelay;
+
+            if (extensionSettings.randomizeTypingSpeed) {
+                typingDelay = Math.floor(Math.random() * (extensionSettings.typingDelay - 1) + 1);
+            }
+
             let nextPosition = new vscode.Position(pos.line, char.length + pos.character);
-            setTimeout(() => { this.type(text.substring(1, text.length), nextPosition); }, extensionSettings.typingDelay);
+            setTimeout(() => { this.type(text.substring(1, text.length), nextPosition); }, typingDelay);
         });
     };
 }

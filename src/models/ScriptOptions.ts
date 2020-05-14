@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
 
-export enum ScriptOptionsAlign {
+enum ScriptOptionsAlign {
     middle = "middle",
     top = "top"
 }
 
 export class ScriptOptions {
-    public file: string;
-    public line: number;
-    public col: number;
-    public align: ScriptOptionsAlign;
+    public file: string = "";
+    public line: number = 0;
+    public col: number = 0;
+    public align: ScriptOptionsAlign = ScriptOptionsAlign.middle;
 
-    constructor(text: string) {
+    public parse = (text: string) => {
 
         let builder: any = text.split("\n")
             .reduce((accumulator: any, item: string) => {
@@ -43,7 +43,7 @@ export class ScriptOptions {
         this.line = builder.line;
         this.col = builder.col;
         this.align = builder.align;
-    }
+    };
 
     public getTextEditorRevealType = (): vscode.TextEditorRevealType => {
         switch (this.align) {

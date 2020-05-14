@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
-import { ParsedScript } from "../models/ParsedScript";
+import { Script } from "../models/Script";
 import { ExtensionSettings } from "../models/ExtensionSettings";
 
 export class ExtensionService {
@@ -16,13 +16,17 @@ export class ExtensionService {
             rootDirectory = ws.workspaceFolders[0].uri.fsPath;
         } else {
             vscode.window.showErrorMessage("No workspace or folders currently open");
-            throw new Error("No workspace or folders currently open");
+            return "";
         }
 
         return `${rootDirectory}${extensionSettings.scriptDirectory}`;
     };
 
-    public loadScripts = (): ParsedScript[] => {
+    public loadScripts = (): Script[] => {
+
+        if (this.getFullScriptDirectory() === "") {
+            return [];
+        }
 
         if (!fs.existsSync(this.getFullScriptDirectory())) {
             vscode.window.showErrorMessage(`The script directory ${this.getFullScriptDirectory()} does not exist in this workspace`);
@@ -37,7 +41,7 @@ export class ExtensionService {
         }
 
         return scripts.map((scriptName) => {
-            return new ParsedScript(scriptName);
+            return new Script(scriptName);
         });
     };
 

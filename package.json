@@ -34,49 +34,54 @@
 		"configuration": {
 			"title": "Live Coder",
 			"properties": {
-				"livecoder.settings.scriptDirectory": {
-					"type": "string",
-					"default": "/.liveCoder",
-					"description": "Path (from root of workspace with leading slash) containing scripts to play."
-				},
-				"livecoder.settings.typingDelay": {
-					"type": "number",
-					"default": 250,
-					"minimum": 0,
-					"description": "Delay (in milliseconds) between keystrokes."
-				},
-				"livecoder.settings.currentQueuePosition": {
+				"livecoder.generalSettings.currentQueuePosition": {
 					"type": "number",
 					"default": 1,
 					"minimum": 1,
-					"description": "Current script position number in the queue.  Set to 1 to reset queue."
+					"description": "Current script position number in the queue.  Set to 1 to reset queue. (Default: 1)"
+				},
+				"livecoder.generalSettings.scriptDirectory": {
+					"type": "string",
+					"default": "/.liveCoder",
+					"description": "Path (from root of workspace with leading slash) containing scripts to play.  (Default: '/.liveCoder')"
+				},
+				"livecoder.generalSettings.typingDelay": {
+					"type": "number",
+					"default": 250,
+					"minimum": 0,
+					"description": "Delay (in milliseconds) between keystrokes.  (Default: 250ms)"
+				},
+				"livecoder.generalSettings.randomizeTypingSpeed": {
+					"type": "boolean",
+					"default": false,
+					"description": "Use the typing delay and randomize the typing speed to create a more 'human' feel.  (Default: false)"
 				}
 			}
 		},
         "commands": [
 			{
                 "command": "livecoder.playAllScripts",
-                "title": "Play All Scripts (From Beginning)"
+                "title": "Live Coder:Play All Scripts (From Beginning)"
             },
 			{
                 "command": "livecoder.playNextScript",
-                "title": "Play Next Script"
+                "title": "Live Coder:Play Next Script"
 			},
 			{
                 "command": "livecoder.playNextNScripts",
-                "title": "Play Next <#> Scripts"
+                "title": "Live Coder:Play Next <#> Scripts"
 			},
 			{
                 "command": "livecoder.playRemainingScripts",
-                "title": "Play Remaining Scripts"
+                "title": "Live Coder:Play Remaining Scripts"
 			},
 			{
                 "command": "livecoder.playSpecificScript",
-                "title": "Play Specific Script"
+                "title": "Live Coder:Play Specific Script"
             },
             {
                 "command": "livecoder.setQueuePosition",
-                "title": "Set Queue Position"
+                "title": "Live Coder:Set Queue Position"
             }
         ]
     },
