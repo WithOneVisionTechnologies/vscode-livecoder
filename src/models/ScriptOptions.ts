@@ -7,8 +7,8 @@ enum ScriptOptionsAlign {
 
 export class ScriptOptions {
     public file: string = "";
-    public line: number = 0;
-    public col: number = 0;
+    public line: number = -1;
+    public col: number = -1;
     public align: ScriptOptionsAlign = ScriptOptionsAlign.middle;
 
     public parse = (text: string) => {
@@ -20,29 +20,21 @@ export class ScriptOptions {
                 return accumulator;
             }, {});
 
-        if (!builder.file) {
-            builder.file = "";
+        if (builder.file) {
+            this.file = builder.file;
         }
 
-        if (!builder.line) {
-            builder.line = 1;
+        if (builder.line) {
+            this.line = builder.line - 1;
         }
 
-        if (!builder.col) {
-            builder.col = 1;
+        if (builder.col) {
+            this.col = builder.col - 1;
         }
 
-        builder.line = builder.line - 1;
-        builder.col = builder.col - 1;
-
-        if (!builder.align) {
-            builder.align = ScriptOptionsAlign.middle;
+        if (builder.align) {
+            this.align = builder.align;
         }
-
-        this.file = builder.file;
-        this.line = builder.line;
-        this.col = builder.col;
-        this.align = builder.align;
     };
 
     public getTextEditorRevealType = (): vscode.TextEditorRevealType => {

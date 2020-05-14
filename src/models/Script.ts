@@ -9,13 +9,14 @@ export class Script {
     public name: string = "";
     public path: string = "";
     public content: string = "";
+    public hasOptions: boolean = false;
 
     private extensionService: ExtensionService = new ExtensionService();
 
     constructor(scriptName: string) {
 
         if (this.extensionService.getFullScriptDirectory() === "") {
-            vscode.window.showErrorMessage("No workspace or folders currently open");
+            vscode.window.showErrorMessage("Live Coder: No workspace or folders currently open");
             return;
         }
 
@@ -26,8 +27,10 @@ export class Script {
         try {
 
             if (contentParts.length === 1) {
+                this.hasOptions = false;
                 this.content = contentParts[0];
             } else {
+                this.hasOptions = true;
                 this.options.parse(contentParts[0]);
                 this.content = contentParts[1];
             }
@@ -36,12 +39,12 @@ export class Script {
             this.path = scriptPath;
         }
         catch (e) {
-            vscode.window.showErrorMessage(`Error ${e} while trying to parse options in script ${scriptPath}`);
+            vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to parse options in script ${scriptPath}`);
             return;
         }
 
         if (this.options.file !== "" && !fs.existsSync(this.options.file) && !fs.existsSync(`${this.extensionService.getFullScriptDirectory()}/../${this.options.file}`)) {
-            vscode.window.showErrorMessage(`Can"t find target file ${this.options.file}`);
+            vscode.window.showErrorMessage(`Live Coder: Can"t find target file ${this.options.file}`);
             return;
         }
     }
@@ -51,11 +54,11 @@ export class Script {
         let ws = vscode.workspace;
 
         if (ws === undefined) {
-            vscode.window.showErrorMessage("No workspace or folders currently open");
+            vscode.window.showErrorMessage("Live Coder: No workspace or folders currently open");
             return;
         }
 
-        if (this.options.file !== "") {
+        if (this.hasOptions && this.options.file !== "") {
             let filePath: string = (this.options.file.indexOf("/") === 0) ? this.options.file :
                 `${this.extensionService.getFullScriptDirectory()}/${this.options.file}`;
 
@@ -76,12 +79,7 @@ export class Script {
                     return;
                 }
 
-                let range = activeDoc.lineAt(this.options.line).range;
-                editor.selection = new vscode.Selection(range.start, range.end);
-                editor.revealRange(range, this.options.getTextEditorRevealType());
-
-                let pos: vscode.Position = new vscode.Position(this.options.line, this.options.col);
-                this.type(this.content, pos);
+                this.type(this.content, this.getPosition(editor, activeDoc));
             });
         } else {
             let editor = vscode.window.activeTextEditor;
@@ -96,13 +94,37 @@ export class Script {
                 return;
             }
 
-            let range = activeDoc.lineAt(0).range;
+            this.type(this.content, this.getPosition(editor, activeDoc));
+        }
+    };
+
+    private getPosition = (editor: vscode.TextEditor, document: vscode.TextDocument): vscode.Position => {
+        
+        let position: vscode.Position;
+
+        if (this.hasOptions) {
+            let line = this.options.line;
+            let col = this.options.col;
+
+            if (line === -1) {
+                line = editor.selection.active.line;
+            }
+
+            if (col === -1) {
+                col = editor.selection.active.character;
+            }
+
+            let range = document.lineAt(line).range;
             editor.selection = new vscode.Selection(range.start, range.end);
             editor.revealRange(range, this.options.getTextEditorRevealType());
+            position = new vscode.Position(line, col);
 
-            let pos: vscode.Position = new vscode.Position(this.options.line, this.options.col);
-            this.type(this.content, pos);
+        } else {
+            position = editor.selection.active;
         }
+        
+        return position;
+    
     };
 
     private type = (text: string, position: vscode.Position) => {

@@ -12,7 +12,7 @@ export class SetQueuePositionCommand {
             let inputBox: string | undefined = await vscode.window.showInputBox({ placeHolder: "Enter Position of Queue (1 for Beginning)" });
             
             if (inputBox === undefined) {
-                vscode.window.showErrorMessage("You must input a valid positive number for the queue position");
+                vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for the queue position");
                 return;
             }
 
@@ -21,12 +21,12 @@ export class SetQueuePositionCommand {
             try {
                 queuePosition = +inputBox;
             } catch {
-                vscode.window.showErrorMessage("You must input a valid positive number for the queue position");
+                vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for the queue position");
                 return;
             }
 
             if (queuePosition <= 0) {
-                vscode.window.showErrorMessage("You must input a valid positive number for the queue position");
+                vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for the queue position");
                 return;
             }
             

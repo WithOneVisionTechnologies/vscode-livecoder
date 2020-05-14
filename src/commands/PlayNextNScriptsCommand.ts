@@ -16,7 +16,7 @@ export class PlayNextNScriptsCommand {
             let inputBox: string | undefined = await vscode.window.showInputBox({ placeHolder: "Enter Number of Scripts to Play" });
 
             if (inputBox === undefined) {
-                vscode.window.showErrorMessage("You must input a valid positive number for the number of scripts to play");
+                vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for the number of scripts to play");
                 return;
             }
 
@@ -25,12 +25,12 @@ export class PlayNextNScriptsCommand {
             try {
                 numberOfScripts = +inputBox;
             } catch {
-                vscode.window.showErrorMessage("You must input a valid positive number for the number of scripts to play");
+                vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for the number of scripts to play");
                 return;
             }
 
             if (numberOfScripts <= 0) {
-                vscode.window.showErrorMessage("You must input a valid positive number for the number of scripts to play");
+                vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for the number of scripts to play");
                 return;
             }
 
@@ -40,16 +40,16 @@ export class PlayNextNScriptsCommand {
                 scripts = extensionService.loadScripts();
             }
             catch (e) {
-                vscode.window.showErrorMessage(`Error ${e} while trying to load scripts`);
+                vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to load scripts`);
                 return;
             }
 
             if (scripts.length === 0) {
-                vscode.window.showErrorMessage(`No scripts have been loaded`);
+                vscode.window.showErrorMessage(`Live Coder: No scripts have been loaded`);
             }
 
             if (extensionSettings.currentQueuePosition >= scripts.length) {
-                vscode.window.showInformationMessage("No more scripts");
+                vscode.window.showInformationMessage("Live Coder: No more scripts to play");
                 return;
             }
 

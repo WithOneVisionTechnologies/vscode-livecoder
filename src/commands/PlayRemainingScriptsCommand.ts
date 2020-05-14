@@ -18,16 +18,16 @@ export class PlayRemainingScriptsCommand {
                 scripts = extensionService.loadScripts();
             }
             catch (e) {
-                vscode.window.showErrorMessage(`Error ${e} while trying to load scripts`);
+                vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to load scripts`);
                 return;
             }
 
             if (scripts.length === 0) {
-                vscode.window.showErrorMessage(`No scripts have been loaded`);
+                vscode.window.showErrorMessage(`Live Coder: No scripts have been loaded`);
             }
     
             if (extensionSettings.currentQueuePosition >= scripts.length) {
-                vscode.window.showInformationMessage("No more scripts");
+                vscode.window.showInformationMessage("Live Coder: No more scripts to play");
                 return;
             }
 
@@ -41,7 +41,7 @@ export class PlayRemainingScriptsCommand {
                     try {
                         await script.play();
                     } catch (e) {
-                        vscode.window.showErrorMessage(`Error ${e} while trying to play script ${script.name}`);
+                        vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to play script ${script.name}`);
                     }
 
                 }

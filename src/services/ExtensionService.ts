@@ -15,7 +15,7 @@ export class ExtensionService {
         if (ws !== undefined && ws.workspaceFolders !== undefined && ws.workspaceFolders.length > 0) {
             rootDirectory = ws.workspaceFolders[0].uri.fsPath;
         } else {
-            vscode.window.showErrorMessage("No workspace or folders currently open");
+            vscode.window.showErrorMessage("Live Coder: No workspace or folders currently open");
             return "";
         }
 
@@ -29,14 +29,14 @@ export class ExtensionService {
         }
 
         if (!fs.existsSync(this.getFullScriptDirectory())) {
-            vscode.window.showErrorMessage(`The script directory ${this.getFullScriptDirectory()} does not exist in this workspace`);
+            vscode.window.showErrorMessage(`Live Coder: The script directory ${this.getFullScriptDirectory()} does not exist in this workspace`);
             return [];
         }
 
         let scripts: string[] = fs.readdirSync(this.getFullScriptDirectory());
 
         if (!scripts.length) {
-            vscode.window.showWarningMessage(`No scripts found in ${this.getFullScriptDirectory()}`);
+            vscode.window.showWarningMessage(`Live Coder: No scripts found in ${this.getFullScriptDirectory()}`);
             return [];
         }
 
