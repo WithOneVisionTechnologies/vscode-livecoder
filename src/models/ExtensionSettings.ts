@@ -50,7 +50,7 @@ export class ExtensionSettings {
 
     public getCurrentQueuePositionStatusBarText = (): string => {
 
-        let preText: string = "Live Coder Queue Position: ";
+        let preText: string = "Live Coder Current Queue Position: ";
 
         if (vscode.workspace.workspaceFolders === undefined) {
             return preText + ExtensionConstants.Default_CurrentQueuePosition;

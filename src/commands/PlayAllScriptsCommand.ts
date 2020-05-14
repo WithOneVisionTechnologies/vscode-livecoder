@@ -25,16 +25,19 @@ export class PlayAllScriptsCommand {
             if (scripts.length === 0) {
                 vscode.window.showErrorMessage(`Live Coder: No scripts have been loaded`);
             }
-    
-            await extensionSettings.resetCurrentQueuePosition();
             
-            for (let script of scripts) {
+            await extensionSettings.resetCurrentQueuePosition();
+
+            for (let i = 0; i < scripts.length; i++) {
                 try {
-                    await script.play();
+                    await scripts[i].play();
+                    await extensionSettings.incrementCurrentQueuePosition();
                 } catch (e) {
-                    vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to play script ${script.name}`);
+                    vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to play script ${scripts[i].name}`);
                 }
             }
+
+            await extensionSettings.resetCurrentQueuePosition();
         });
     
         context.subscriptions.push(playAllScripts);

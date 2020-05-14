@@ -53,20 +53,17 @@ export class PlayNextNScriptsCommand {
                 return;
             }
 
-            await extensionSettings.setCurrentQueuePosition(extensionSettings.currentQueuePosition + numberOfScripts);
+            let currentQueuePosition: number = extensionSettings.currentQueuePosition;
 
-            let currentScriptNumber: number = 0;
-
-            for (let script of scripts) {
-                if (currentScriptNumber >= extensionSettings.currentQueuePosition && currentScriptNumber < (extensionSettings.currentQueuePosition + numberOfScripts)) {
+            for (let i = 0; i < scripts.length; i++) {
+                if (i >= currentQueuePosition && i <= (currentQueuePosition + numberOfScripts)) {
                     try {
-                        await script.play();
+                        await scripts[i].play();
+                        await extensionSettings.incrementCurrentQueuePosition();
                     } catch (e) {
-                        vscode.window.showErrorMessage(`Error ${e} while trying to play script ${script.name}`);
+                        vscode.window.showErrorMessage(`Error ${e} while trying to play script ${scripts[i].name}`);
                     }
                 }
-
-                currentScriptNumber++;
             }
         });
 

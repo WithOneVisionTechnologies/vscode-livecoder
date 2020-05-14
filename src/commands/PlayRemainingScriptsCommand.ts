@@ -31,23 +31,21 @@ export class PlayRemainingScriptsCommand {
                 return;
             }
 
+            let currentQueuePosition: number = extensionSettings.currentQueuePosition;
 
-            await extensionSettings.resetCurrentQueuePosition();
-            
-            let currentScriptNumber: number = 0;
-
-            for (let script of scripts) {
-                if (currentScriptNumber >= extensionSettings.currentQueuePosition) {
+            for (let i = 0; i < scripts.length; i++) {
+                if (i >= currentQueuePosition) {
                     try {
-                        await script.play();
+                        await scripts[0].play();
+                        await extensionSettings.incrementCurrentQueuePosition();
                     } catch (e) {
-                        vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to play script ${script.name}`);
+                        vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to play script ${scripts[0].name}`);
                     }
 
                 }
-
-                currentScriptNumber++;
             }
+
+            await extensionSettings.resetCurrentQueuePosition();
         });
     
         context.subscriptions.push(playRemainingScripts);

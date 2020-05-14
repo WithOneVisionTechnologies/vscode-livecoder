@@ -32,10 +32,10 @@ export class PlayNextScriptCommand {
             }
     
             let script: Script = scripts[extensionSettings.currentQueuePosition];
-            await extensionSettings.incrementCurrentQueuePosition();
             
             try {
                 await script.play();
+                await extensionSettings.incrementCurrentQueuePosition();
             } catch (e) {
                 vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to play script ${script.name}`);
             }

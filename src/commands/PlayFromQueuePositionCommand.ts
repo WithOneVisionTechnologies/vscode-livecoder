@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { ExtensionService } from "../services/ExtensionService";
 import { Script } from "../models/Script";
 import { ExtensionConstants } from "../models/ExtensionConstants";
+import { ExtensionSettings } from "../models/ExtensionSettings";
 
 export class PlayFromQueuePositionCommand {
 
@@ -10,6 +11,7 @@ export class PlayFromQueuePositionCommand {
         let playFromQueuePosition = vscode.commands.registerCommand(ExtensionConstants.Command_PlayFromQueuePosition, async () => {
 
             let extensionService: ExtensionService = new ExtensionService();
+            let extensionSettings: ExtensionSettings = new ExtensionSettings();
 
             let beginningPositionInputBox: string | undefined = await vscode.window.showInputBox({ placeHolder: "Enter the beginning queue position" });
 
@@ -57,18 +59,17 @@ export class PlayFromQueuePositionCommand {
                 vscode.window.showErrorMessage(`Live Coder: No scripts have been loaded`);
             }
 
-            let currentScriptNumber: number = 0;
+            await extensionSettings.setCurrentQueuePosition(beginningPosition);
 
-            for (let script of scripts) {
-                if (currentScriptNumber >= beginningPosition && currentScriptNumber <= endingPosition) {
+            for (let i = 0; i < scripts.length; i++) {      
+                if (i >= (beginningPosition - 1) && i <= (endingPosition - 1)) {
                     try {
-                        await script.play();
+                        await scripts[i].play();
+                        await extensionSettings.incrementCurrentQueuePosition();
                     } catch (e) {
-                        vscode.window.showErrorMessage(`Error ${e} while trying to play script ${script.name}`);
+                        vscode.window.showErrorMessage(`Error ${e} while trying to play script ${scripts[i].name}`);
                     }
                 }
-
-                currentScriptNumber++;
             }
         });
 
