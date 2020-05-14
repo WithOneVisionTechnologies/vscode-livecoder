@@ -36,10 +36,12 @@ export class PlaySpecificScriptCommand {
 
             if (foundScripts.length === 0) {
                 vscode.window.showErrorMessage(`Live Coder: No script was found in your script directory with the name ${inputBox}`);
+                return;
             }
 
             if (foundScripts.length > 1) {
                 vscode.window.showErrorMessage(`Live Coder: More than one script was found with the name ${inputBox}`);
+                return;
             }
 
             try {

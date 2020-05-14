@@ -94,12 +94,12 @@ export class Script {
                 return;
             }
 
-            this.type(this.content, this.getPosition(editor, activeDoc));
+            await this.type(this.content, this.getPosition(editor, activeDoc));
         }
     };
 
     private getPosition = (editor: vscode.TextEditor, document: vscode.TextDocument): vscode.Position => {
-        
+
         let position: vscode.Position;
 
         if (this.hasOptions) {
@@ -122,12 +122,12 @@ export class Script {
         } else {
             position = editor.selection.active;
         }
-        
+
         return position;
-    
+
     };
 
-    private type = (text: string, position: vscode.Position) => {
+    private type = async (text: string, position: vscode.Position): Promise<void> => {
 
         if (!text) {
             return;
@@ -176,7 +176,7 @@ export class Script {
             char = "";
         }
 
-        editor.edit((editBuilder: vscode.TextEditorEdit) => {
+        await editor.edit((editBuilder: vscode.TextEditorEdit) => {
 
             if (char !== "⌫") {
                 editBuilder.insert(pos, char);
@@ -199,17 +199,23 @@ export class Script {
             if (editor !== undefined) {
                 editor.selection = newSelection;
             }
-        }).then(() => {
-            let extensionSettings: ExtensionSettings = new ExtensionSettings();
-
-            let typingDelay: number = extensionSettings.typingDelay;
-
-            if (extensionSettings.randomizeTypingSpeed) {
-                typingDelay = Math.floor(Math.random() * (extensionSettings.typingDelay - 1) + 1);
-            }
-
-            let nextPosition = new vscode.Position(pos.line, char.length + pos.character);
-            setTimeout(() => { this.type(text.substring(1, text.length), nextPosition); }, typingDelay);
         });
+
+        let extensionSettings: ExtensionSettings = new ExtensionSettings();
+        let typingDelay: number = extensionSettings.typingDelay;
+        let nextPosition = new vscode.Position(pos.line, char.length + pos.character);
+
+        if (text.substring(1, text.length) !== "") {
+            this.sleep(typingDelay);
+            await this.type(text.substring(1, text.length), nextPosition);
+        }
+    };
+
+    private sleep = (milliseconds: number) => {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
     };
 }

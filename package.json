@@ -50,11 +50,6 @@
 					"default": 250,
 					"minimum": 0,
 					"description": "Delay (in milliseconds) between keystrokes.  (Default: 250ms)"
-				},
-				"livecoder.generalSettings.randomizeTypingSpeed": {
-					"type": "boolean",
-					"default": false,
-					"description": "Use the typing delay and randomize the typing speed to create a more 'human' feel.  (Default: false)"
 				}
 			}
 		},
@@ -85,7 +80,11 @@
             },
             {
                 "command": "livecoder.setQueuePosition",
-                "title": "Live Coder:Set Queue Position"
+                "title": "Live Coder:Set Queue Position (Workspace)"
+			},
+			{
+                "command": "livecoder.setTypingDelay",
+                "title": "Live Coder:Set Typing Delay (Workspace)"
             }
         ]
     },

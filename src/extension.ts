@@ -5,6 +5,8 @@ import { PlayAllScriptsCommand } from "./commands/PlayAllScriptsCommand";
 import { PlayRemainingScriptsCommand } from "./commands/PlayRemainingScriptsCommand";
 import { PlayNextNScriptsCommand } from "./commands/PlayNextNScriptsCommand";
 import { PlayFromQueuePositionCommand } from "./commands/PlayFromQueuePositionCommand";
+import { SetTypingDelayCommand } from "./commands/SetTypingDelayCommand";
+import { PlaySpecificScriptCommand } from "./commands/PlaySpecificScriptCommand";
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -20,11 +22,17 @@ export function activate(context: vscode.ExtensionContext) {
 	let playRemainingScriptsCommand: PlayRemainingScriptsCommand = new PlayRemainingScriptsCommand();
 	playRemainingScriptsCommand.setup(context);
 
+	let playSpecificScriptCommand: PlaySpecificScriptCommand = new PlaySpecificScriptCommand();
+	playSpecificScriptCommand.setup(context);
+
 	let playFromQueuePositionCommand: PlayFromQueuePositionCommand = new PlayFromQueuePositionCommand();
 	playFromQueuePositionCommand.setup(context);
 
 	let setQueuePosition: SetQueuePositionCommand = new SetQueuePositionCommand();
 	setQueuePosition.setup(context);
+
+	let setTypingDelay: SetTypingDelayCommand = new SetTypingDelayCommand();
+	setTypingDelay.setup(context);
 
 }
 

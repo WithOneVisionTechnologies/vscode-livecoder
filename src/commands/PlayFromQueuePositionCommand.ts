@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { ExtensionService } from "../services/ExtensionService";
 import { Script } from "../models/Script";
-import { ExtensionSettings } from "../models/ExtensionSettings";
 import { ExtensionConstants } from "../models/ExtensionConstants";
 
 export class PlayFromQueuePositionCommand {
@@ -11,7 +10,6 @@ export class PlayFromQueuePositionCommand {
         let playFromQueuePosition = vscode.commands.registerCommand(ExtensionConstants.Command_PlayFromQueuePosition, async () => {
 
             let extensionService: ExtensionService = new ExtensionService();
-            let extensionSettings: ExtensionSettings = new ExtensionSettings();
 
             let beginningPositionInputBox: string | undefined = await vscode.window.showInputBox({ placeHolder: "Enter the beginning queue position" });
 

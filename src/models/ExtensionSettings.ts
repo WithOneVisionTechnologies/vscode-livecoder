@@ -18,21 +18,6 @@ export class ExtensionSettings {
         }
     }
 
-    get randomizeTypingSpeed(): boolean {
-
-        if (vscode.workspace.workspaceFolders === undefined) {
-            return false;
-        }
-
-        let randomizeTypingSpeedSetting: boolean | undefined = vscode.workspace.getConfiguration(ExtensionConstants.Setting_ConfigurationSection).get<boolean>(ExtensionConstants.Setting_RandomizeTypingSpeed);
-
-        if (randomizeTypingSpeedSetting === undefined) {
-            return false;
-        } else {
-            return randomizeTypingSpeedSetting;
-        }
-    }
-
     get scriptDirectory(): string {
 
         if (vscode.workspace.workspaceFolders === undefined) {
@@ -88,5 +73,14 @@ export class ExtensionSettings {
         }
 
         await vscode.workspace.getConfiguration(ExtensionConstants.Setting_ConfigurationSection).update(ExtensionConstants.Setting_CurrentQueuePosition, queueNumber + 1);
+    };
+
+    public setTypingDelay = async (typingDelay: number): Promise<void> => {
+
+        if (vscode.workspace.workspaceFolders === undefined) {
+            return;
+        }
+
+        await vscode.workspace.getConfiguration(ExtensionConstants.Setting_ConfigurationSection).update(ExtensionConstants.Setting_TypingDelay, typingDelay);
     };
 }
