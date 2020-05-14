@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { ExtensionSettings } from "../models/ExtensionSettings";
-import { ExtensionConstants } from "../models/ExtensionConstants";
+import { ExtensionSettings } from "../../models/ExtensionSettings";
+import { ExtensionConstants } from "../../models/ExtensionConstants";
 
 export class SetQueuePositionCommand {
 

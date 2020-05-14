@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { ExtensionService } from "../services/ExtensionService";
-import { Script } from "../models/Script";
-import { ExtensionSettings } from "../models/ExtensionSettings";
-import { ExtensionConstants } from "../models/ExtensionConstants";
+import { ExtensionService } from "../../services/ExtensionService";
+import { Script } from "../../models/Script";
+import { ExtensionSettings } from "../../models/ExtensionSettings";
+import { ExtensionConstants } from "../../models/ExtensionConstants";
 
 export class PlayAllScriptsCommand {
 

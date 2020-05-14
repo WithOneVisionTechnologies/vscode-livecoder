@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ExtensionSettings } from "../models/ExtensionSettings";
+import { ExtensionSettings } from "../../models/ExtensionSettings";
 
 export class CurrentQueuePositionStatusBar {
 

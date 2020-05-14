@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { ExtensionService } from "../services/ExtensionService";
-import { Script } from "../models/Script";
-import { ExtensionConstants } from "../models/ExtensionConstants";
+import { ExtensionService } from "../../services/ExtensionService";
+import { Script } from "../../models/Script";
+import { ExtensionConstants } from "../../models/ExtensionConstants";
 
 export class PlaySpecificScriptCommand {
 

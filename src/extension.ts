@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { SetQueuePositionCommand } from "./commands/SetQueuePositionCommand";
-import { PlayNextScriptCommand } from "./commands/PlayNextScriptCommand";
-import { PlayAllScriptsCommand } from "./commands/PlayAllScriptsCommand";
-import { PlayRemainingScriptsCommand } from "./commands/PlayRemainingScriptsCommand";
-import { PlayNextNScriptsCommand } from "./commands/PlayNextNScriptsCommand";
-import { PlayFromQueuePositionCommand } from "./commands/PlayFromQueuePositionCommand";
-import { SetTypingDelayCommand } from "./commands/SetTypingDelayCommand";
-import { PlaySpecificScriptCommand } from "./commands/PlaySpecificScriptCommand";
-import { CurrentQueuePositionStatusBar } from "./statusBars/CurrentQueuePositionStatusBar";
+import { SetQueuePositionCommand } from "./contributions/commands/SetQueuePositionCommand";
+import { PlayNextScriptCommand } from "./contributions/commands/PlayNextScriptCommand";
+import { PlayAllScriptsCommand } from "./contributions/commands/PlayAllScriptsCommand";
+import { PlayRemainingScriptsCommand } from "./contributions/commands/PlayRemainingScriptsCommand";
+import { PlayNextNScriptsCommand } from "./contributions/commands/PlayNextNScriptsCommand";
+import { PlayFromQueuePositionCommand } from "./contributions/commands/PlayFromQueuePositionCommand";
+import { SetTypingDelayCommand } from "./contributions/commands/SetTypingDelayCommand";
+import { PlaySpecificScriptCommand } from "./contributions/commands/PlaySpecificScriptCommand";
+import { CurrentQueuePositionStatusBar } from "./contributions/statusBars/CurrentQueuePositionStatusBar";
 
 export function activate(context: vscode.ExtensionContext) {
 
