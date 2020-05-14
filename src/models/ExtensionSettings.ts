@@ -48,6 +48,24 @@ export class ExtensionSettings {
         }
     }
 
+    public getCurrentQueuePositionStatusBarText = (): string => {
+
+        let preText: string = "Live Coder Queue Position: ";
+
+        if (vscode.workspace.workspaceFolders === undefined) {
+            return preText + ExtensionConstants.Default_CurrentQueuePosition;
+        }
+
+        let currentQueuePositionSetting: number | undefined = vscode.workspace.getConfiguration(ExtensionConstants.Setting_ConfigurationSection).get<number>(ExtensionConstants.Setting_CurrentQueuePosition);
+
+        if (currentQueuePositionSetting === undefined) {
+            return preText + ExtensionConstants.Default_CurrentQueuePosition;
+        } else {
+            return preText + currentQueuePositionSetting;
+        }
+
+    };
+
     public incrementCurrentQueuePosition = async (): Promise<void> => {
         
         if (vscode.workspace.workspaceFolders === undefined) {

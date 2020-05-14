@@ -7,6 +7,7 @@ import { PlayNextNScriptsCommand } from "./commands/PlayNextNScriptsCommand";
 import { PlayFromQueuePositionCommand } from "./commands/PlayFromQueuePositionCommand";
 import { SetTypingDelayCommand } from "./commands/SetTypingDelayCommand";
 import { PlaySpecificScriptCommand } from "./commands/PlaySpecificScriptCommand";
+import { CurrentQueuePositionStatusBar } from "./statusBars/CurrentQueuePositionStatusBar";
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -28,11 +29,14 @@ export function activate(context: vscode.ExtensionContext) {
 	let playFromQueuePositionCommand: PlayFromQueuePositionCommand = new PlayFromQueuePositionCommand();
 	playFromQueuePositionCommand.setup(context);
 
-	let setQueuePosition: SetQueuePositionCommand = new SetQueuePositionCommand();
-	setQueuePosition.setup(context);
+	let setQueuePositionCommand: SetQueuePositionCommand = new SetQueuePositionCommand();
+	setQueuePositionCommand.setup(context);
 
-	let setTypingDelay: SetTypingDelayCommand = new SetTypingDelayCommand();
-	setTypingDelay.setup(context);
+	let setTypingDelayCommand: SetTypingDelayCommand = new SetTypingDelayCommand();
+	setTypingDelayCommand.setup(context);
+
+	let currentQueuePositionStatusBar: CurrentQueuePositionStatusBar = new CurrentQueuePositionStatusBar();
+	currentQueuePositionStatusBar.setup(context);
 
 }
 
