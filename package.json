@@ -37,12 +37,19 @@
 				"livecoder.settings.scriptDirectory": {
 					"type": "string",
 					"default": "/.liveCoder",
-					"description": "Path (from root of workspace with leading slash) containing scripts to play"
+					"description": "Path (from root of workspace with leading slash) containing scripts to play."
 				},
-				"livecoder.settings.tyingDelay": {
+				"livecoder.settings.typingDelay": {
 					"type": "number",
 					"default": 250,
+					"minimum": 0,
 					"description": "Delay (in milliseconds) between keystrokes."
+				},
+				"livecoder.settings.currentQueuePosition": {
+					"type": "number",
+					"default": 1,
+					"minimum": 1,
+					"description": "Current script position number in the queue.  Set to 1 to reset queue."
 				}
 			}
 		},
@@ -68,8 +75,8 @@
                 "title": "Play Specific Script"
             },
             {
-                "command": "livecoder.resetScriptQueue",
-                "title": "Restart Script Queue"
+                "command": "livecoder.setQueuePosition",
+                "title": "Set Queue Position"
             }
         ]
     },

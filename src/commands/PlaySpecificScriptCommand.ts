@@ -1,12 +1,15 @@
 import * as vscode from "vscode";
-import ExtensionStore from "../stores/ExtensionStore";
+import { ExtensionService } from "../services/ExtensionService";
 import { ParsedScript } from "../models/ParsedScript";
+import { ExtensionConstants } from "../models/ExtensionConstants";
 
 export class PlaySpecificScriptCommand {
 
     public setup = async (context: vscode.ExtensionContext) => {
 
-        let playSpecificScript = vscode.commands.registerCommand("livecoder.playSpecificScript", async () => {
+        let playSpecificScript = vscode.commands.registerCommand(ExtensionConstants.Command_PlaySpecificScript, async () => {
+
+            let extensionService: ExtensionService = new ExtensionService();
 
             let inputBox: string | undefined = await vscode.window.showInputBox({ placeHolder: "Enter File Name to Play" });
 
@@ -18,7 +21,7 @@ export class PlaySpecificScriptCommand {
             let scripts: ParsedScript[] = [];
 
             try {
-                scripts = ExtensionStore.loadScripts();
+                scripts = extensionService.loadScripts();
             }
             catch (e) {
                 vscode.window.showErrorMessage(`Error ${e} while trying to load scripts`);
@@ -35,7 +38,11 @@ export class PlaySpecificScriptCommand {
                 vscode.window.showErrorMessage(`More than one script was found with the name ${inputBox}`);
             }
 
-            await ExtensionStore.playScript(foundScripts[0]);
+            try {
+                await foundScripts[0].play();
+            } catch (e) {
+                vscode.window.showErrorMessage(`Error ${e} while trying to play script ${foundScripts[0].name}`);
+            }
         });
 
         context.subscriptions.push(playSpecificScript);

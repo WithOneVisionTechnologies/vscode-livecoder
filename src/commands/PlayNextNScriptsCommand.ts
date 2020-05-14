@@ -1,12 +1,17 @@
 import * as vscode from "vscode";
-import ExtensionStore from "../stores/ExtensionStore";
+import { ExtensionService } from "../services/ExtensionService";
 import { ParsedScript } from "../models/ParsedScript";
+import { ExtensionSettings } from "../models/ExtensionSettings";
+import { ExtensionConstants } from "../models/ExtensionConstants";
 
 export class PlayNextNScriptsCommand {
 
     public setup = async (context: vscode.ExtensionContext) => {
 
-        let playNextNScripts = vscode.commands.registerCommand("livecoder.playNextNScripts", async () => {
+        let playNextNScripts = vscode.commands.registerCommand(ExtensionConstants.Command_PlayNextNScripts, async () => {
+
+            let extensionService: ExtensionService = new ExtensionService();
+            let extensionSettings: ExtensionSettings = new ExtensionSettings();
 
             let inputBox: string | undefined = await vscode.window.showInputBox({ placeHolder: "Enter Number of Scripts to Play" });
 
@@ -21,38 +26,44 @@ export class PlayNextNScriptsCommand {
                 numberOfScripts = +inputBox;
             } catch {
                 vscode.window.showErrorMessage("You must input a valid positive number for the number of scripts to play");
+                return;
             }
 
             if (numberOfScripts <= 0) {
                 vscode.window.showErrorMessage("You must input a valid positive number for the number of scripts to play");
+                return;
             }
 
             let scripts: ParsedScript[] = [];
 
             try {
-                scripts = ExtensionStore.loadScripts();
+                scripts = extensionService.loadScripts();
             }
             catch (e) {
                 vscode.window.showErrorMessage(`Error ${e} while trying to load scripts`);
                 return;
             }
 
-            if (ExtensionStore.currentScriptNumber >= scripts.length) {
+            if (extensionSettings.currentQueuePosition >= scripts.length) {
                 vscode.window.showInformationMessage("No more scripts");
                 return;
             }
 
+            await extensionSettings.setCurrentQueuePosition(extensionSettings.currentQueuePosition + numberOfScripts);
+
             let currentScriptNumber: number = 0;
 
             for (let script of scripts) {
-                if (currentScriptNumber >= ExtensionStore.currentScriptNumber && currentScriptNumber < (ExtensionStore.currentScriptNumber + numberOfScripts)) {
-                    await ExtensionStore.playScript(script);
+                if (currentScriptNumber >= extensionSettings.currentQueuePosition && currentScriptNumber < (extensionSettings.currentQueuePosition + numberOfScripts)) {
+                    try {
+                        await script.play();
+                    } catch (e) {
+                        vscode.window.showErrorMessage(`Error ${e} while trying to play script ${script.name}`);
+                    }
                 }
 
                 currentScriptNumber++;
             }
-
-            ExtensionStore.currentScriptNumber = ExtensionStore.currentScriptNumber + numberOfScripts;
         });
 
         context.subscriptions.push(playNextNScripts);

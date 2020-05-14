@@ -11,11 +11,38 @@ export class ScriptOptions {
     public col: number;
     public align: ScriptOptionsAlign;
 
-    constructor(file: string = "", line: number = 1, col: number = 1, align: ScriptOptionsAlign = ScriptOptionsAlign.middle) {
-        this.file = file;
-        this.line = line;
-        this.col = col;
-        this.align = align;
+    constructor(text: string) {
+
+        let builder: any = text.split("\n")
+            .reduce((accumulator: any, item: string) => {
+                let parts = item.split(/\s*:\s*/);
+                accumulator[parts[0]] = parts[1];
+                return accumulator;
+            }, {});
+
+        if (!builder.file) {
+            builder.file = "";
+        }
+
+        if (!builder.line) {
+            builder.line = 1;
+        }
+
+        if (!builder.col) {
+            builder.col = 1;
+        }
+
+        builder.line = builder.line - 1;
+        builder.col = builder.col - 1;
+
+        if (!builder.align) {
+            builder.align = ScriptOptionsAlign.middle;
+        }
+
+        this.file = builder.file;
+        this.line = builder.line;
+        this.col = builder.col;
+        this.align = builder.align;
     }
 
     public getTextEditorRevealType = (): vscode.TextEditorRevealType => {
