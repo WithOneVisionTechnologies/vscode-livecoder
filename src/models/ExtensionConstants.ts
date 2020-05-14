@@ -1,5 +1,6 @@
 export class ExtensionConstants {
     public static Command_PlayAllScripts: string = "livecoder.playAllScripts";
+    public static Command_PlayFromQueuePosition: string = "livecoder.playFromQueuePosition";
     public static Command_PlayNextNScripts: string = "livecoder.playNextNScripts";
     public static Command_PlayNextScript: string = "livecoder.playNextScript";
     public static Command_PlayRemainingScripts: string = "livecoder.playRemainingScripts";
