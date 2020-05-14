@@ -7,13 +7,13 @@ import { ExtensionConstants } from "../../models/ExtensionConstants";
 export class PlayNextScriptCommand {
 
     public setup = async (context: vscode.ExtensionContext) => {
-        
+
         let playNextScript = vscode.commands.registerCommand(ExtensionConstants.Command_PlayNextScript, async () => {
-    
+
             let extensionService: ExtensionService = new ExtensionService();
             let extensionSettings: ExtensionSettings = new ExtensionSettings();
             let scripts: Script[] = [];
-    
+
             try {
                 scripts = extensionService.loadScripts();
             }
@@ -25,14 +25,14 @@ export class PlayNextScriptCommand {
             if (scripts.length === 0) {
                 vscode.window.showErrorMessage(`Live Coder: No scripts have been loaded`);
             }
-    
+
             if (extensionSettings.currentQueuePosition >= scripts.length) {
                 vscode.window.showInformationMessage("Live Coder: No more scripts to play");
                 return;
             }
-    
+
             let script: Script = scripts[extensionSettings.currentQueuePosition];
-            
+
             try {
                 await script.play();
                 await extensionSettings.incrementCurrentQueuePosition();
@@ -41,7 +41,7 @@ export class PlayNextScriptCommand {
             }
 
         });
-    
+
         context.subscriptions.push(playNextScript);
     };
 }

@@ -30,7 +30,7 @@ export class SetQueuePositionCommand {
                 return;
             }
             
-            await extensionSettings.setCurrentQueuePosition(queuePosition);
+            await extensionSettings.setCurrentQueuePosition(queuePosition - 1);
         });
 
         context.subscriptions.push(setQueuePosition);

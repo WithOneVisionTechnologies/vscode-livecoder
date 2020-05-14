@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let setTypingDelayCommand: SetTypingDelayCommand = new SetTypingDelayCommand();
 	setTypingDelayCommand.setup(context);
 
-	let currentQueuePositionStatusBar: CurrentQueuePositionStatusBar = new CurrentQueuePositionStatusBar();
+	let currentQueuePositionStatusBar: CurrentQueuePositionStatusBar = CurrentQueuePositionStatusBar.getInstance();
 	currentQueuePositionStatusBar.setup(context);
 
 }

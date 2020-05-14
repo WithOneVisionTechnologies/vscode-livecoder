@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { ExtensionConstants } from "./ExtensionConstants";
+import { CurrentQueuePositionStatusBar } from "../contributions/statusBars/CurrentQueuePositionStatusBar";
 
 export class ExtensionSettings {
 
@@ -73,6 +74,9 @@ export class ExtensionSettings {
         }
         
         await this.setCurrentQueuePosition(this.currentQueuePosition + 1);
+
+        const statusBar: CurrentQueuePositionStatusBar = CurrentQueuePositionStatusBar.getInstance();
+        statusBar.updateStatusBarItem();
     };
 
     public resetCurrentQueuePosition = async (): Promise<void> => {
@@ -82,6 +86,9 @@ export class ExtensionSettings {
         }
 
         await this.setCurrentQueuePosition(0);
+
+        const statusBar: CurrentQueuePositionStatusBar = CurrentQueuePositionStatusBar.getInstance();
+        statusBar.updateStatusBarItem();
     };
 
     public setCurrentQueuePosition = async (queueNumber: number): Promise<void> => {
@@ -91,6 +98,9 @@ export class ExtensionSettings {
         }
 
         await vscode.workspace.getConfiguration(ExtensionConstants.Setting_ConfigurationSection).update(ExtensionConstants.Setting_CurrentQueuePosition, queueNumber + 1);
+
+        const statusBar: CurrentQueuePositionStatusBar = CurrentQueuePositionStatusBar.getInstance();
+        statusBar.updateStatusBarItem();
     };
 
     public setTypingDelay = async (typingDelay: number): Promise<void> => {

@@ -56,7 +56,7 @@ export class PlayNextNScriptsCommand {
             let currentQueuePosition: number = extensionSettings.currentQueuePosition;
 
             for (let i = 0; i < scripts.length; i++) {
-                if (i >= currentQueuePosition && i <= (currentQueuePosition + numberOfScripts)) {
+                if (i >= currentQueuePosition && i <= (currentQueuePosition + (numberOfScripts - 1))) {
                     try {
                         await scripts[i].play();
                         await extensionSettings.incrementCurrentQueuePosition();

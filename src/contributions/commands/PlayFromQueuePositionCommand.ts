@@ -39,7 +39,7 @@ export class PlayFromQueuePositionCommand {
             let endingPosition: number = 0;
 
             try {
-                endingPosition = +endingPosition - 1; 
+                endingPosition = +endingPositionInputBox - 1;
             } catch {
                 vscode.window.showErrorMessage("Live Coder: You must input a valid positive number for ending queue position");
                 return;
@@ -61,8 +61,8 @@ export class PlayFromQueuePositionCommand {
 
             await extensionSettings.setCurrentQueuePosition(beginningPosition);
 
-            for (let i = 0; i < scripts.length; i++) {      
-                if (i >= (beginningPosition - 1) && i <= (endingPosition - 1)) {
+            for (let i = 0; i < scripts.length; i++) {
+                if (i >= beginningPosition && i <= endingPosition) {
                     try {
                         await scripts[i].play();
                         await extensionSettings.incrementCurrentQueuePosition();
