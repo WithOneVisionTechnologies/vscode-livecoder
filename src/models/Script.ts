@@ -19,7 +19,7 @@ export class Script {
             return;
         }
 
-        let scriptPath: string = `${this.extensionService.getFullScriptDirectory()}/${scriptName}`;
+        let scriptPath: string = `${this.extensionService.getFullScriptDirectory()}${this.extensionService.getOsSpecificFileSlash()}${scriptName}`;
         let fullContent: string = fs.readFileSync(scriptPath, { encoding: "utf-8" });
         let contentParts: string[] = fullContent.split(/\n\-\-\-\n/m);
 
@@ -54,11 +54,11 @@ export class Script {
 
         if (this.hasOptions && this.options.file !== "") {
 
-            const textDoc: vscode.TextDocument = await ws.openTextDocument(`${extensionService.getRootDirectory()}${this.options.file}`);
+            const textDoc: vscode.TextDocument = await ws.openTextDocument(`${extensionService.getRootDirectory()}${this.extensionService.getOsSpecificFileSlash()}${this.options.file}`);
             vscode.window.showTextDocument(textDoc, { preview: false });
 
             let docs = ws.textDocuments;
-            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}${this.options.file}`) > -1; });
+            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}${this.extensionService.getOsSpecificFileSlash()}${this.options.file}`) > -1; });
 
             if (activeDoc === undefined) {
                 return;

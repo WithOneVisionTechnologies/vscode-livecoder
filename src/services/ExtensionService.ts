@@ -8,11 +8,36 @@ export class ExtensionService {
     public getFullScriptDirectory = (): string => {
 
         let extensionSettings: ExtensionSettings = new ExtensionSettings();
-        return `${this.getRootDirectory()}${extensionSettings.scriptDirectory}`;
+        let rootDirectory: string = this.getRootDirectory();
+        let scriptDirectory: string = `${this.getRootDirectory()}${extensionSettings.scriptDirectory}`;
+
+        if (rootDirectory.includes("/")) {
+            return scriptDirectory = scriptDirectory.replace(/\\/g, '/');
+        }
+        
+        if (rootDirectory.includes("\\")) {
+            return scriptDirectory = scriptDirectory.replace(/\//g, '\\');
+        }
+
+        return scriptDirectory;
+    };
+
+    public getOsSpecificFileSlash = (): string => {
+        let rootDirectory: string = this.getRootDirectory();
+
+        if (rootDirectory.includes("/")) {
+            return "/";
+        }
+        
+        if (rootDirectory.includes("\\")) {
+            return "\\";
+        }
+
+        return "/";
     };
 
     public getRootDirectory = (): string => {
-        
+
         let ws = vscode.workspace;
         let rootDirectory: string = "";
 
