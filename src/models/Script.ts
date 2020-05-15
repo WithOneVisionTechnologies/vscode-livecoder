@@ -7,7 +7,6 @@ import { ExtensionService } from "../services/ExtensionService";
 export class Script {
     public options: ScriptOptions = new ScriptOptions();
     public name: string = "";
-    public path: string = "";
     public content: string = "";
     public hasOptions: boolean = false;
 
@@ -36,21 +35,16 @@ export class Script {
             }
 
             this.name = scriptName;
-            this.path = scriptPath;
         }
         catch (e) {
             vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to parse options in script ${scriptPath}`);
-            return;
-        }
-
-        if (this.options.file !== "" && !fs.existsSync(this.options.file) && !fs.existsSync(`${this.extensionService.getFullScriptDirectory()}/../${this.options.file}`)) {
-            vscode.window.showErrorMessage(`Live Coder: Can"t find target file ${this.options.file}`);
             return;
         }
     }
 
     public play = async () => {
 
+        let extensionService: ExtensionService = new ExtensionService();
         let ws = vscode.workspace;
 
         if (ws === undefined) {
@@ -59,14 +53,12 @@ export class Script {
         }
 
         if (this.hasOptions && this.options.file !== "") {
-            let filePath: string = (this.options.file.indexOf("/") === 0) ? this.options.file :
-                `${this.extensionService.getFullScriptDirectory()}/${this.options.file}`;
 
-            const textDoc: vscode.TextDocument = await ws.openTextDocument(filePath);
+            const textDoc: vscode.TextDocument = await ws.openTextDocument(`${extensionService.getRootDirectory()}/${this.options.file}`);
             vscode.window.showTextDocument(textDoc, { preview: false });
 
             let docs = ws.textDocuments;
-            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(this.options.file) > -1; });
+            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}/${this.options.file}`) > -1; });
 
             if (activeDoc === undefined) {
                 return;
@@ -108,6 +100,10 @@ export class Script {
 
             if (line === -1) {
                 line = editor.selection.active.line;
+            }
+
+            if (line >= editor.document.lineCount) {
+                line = editor.document.lineCount - 1;
             }
 
             if (col === -1) {

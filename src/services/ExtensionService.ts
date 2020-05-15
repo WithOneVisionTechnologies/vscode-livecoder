@@ -8,6 +8,12 @@ export class ExtensionService {
     public getFullScriptDirectory = (): string => {
 
         let extensionSettings: ExtensionSettings = new ExtensionSettings();
+        return `${this.getRootDirectory()}${extensionSettings.scriptDirectory}`;
+    };
+
+    public getRootDirectory = (): string => {
+
+        let extensionSettings: ExtensionSettings = new ExtensionSettings();
 
         let ws = vscode.workspace;
         let rootDirectory: string = "";
@@ -19,7 +25,7 @@ export class ExtensionService {
             return "";
         }
 
-        return `${rootDirectory}${extensionSettings.scriptDirectory}`;
+        return rootDirectory;
     };
 
     public loadScripts = (): Script[] => {
