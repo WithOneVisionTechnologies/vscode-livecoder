@@ -21,7 +21,7 @@ export class Script {
 
         let scriptPath: string = `${this.extensionService.getFullScriptDirectory()}${this.extensionService.getOsSpecificFileSlash()}${scriptName}`;
         let fullContent: string = fs.readFileSync(scriptPath, { encoding: "utf-8" });
-        let contentParts: string[] = fullContent.split(/\n\-\-\-\n/m);
+        let contentParts: string[] = fullContent.split(/(?:\r\n|\r|\n)\-\-\-(?:\r\n|\r|\n)/m);
 
         try {
 
@@ -58,7 +58,9 @@ export class Script {
             vscode.window.showTextDocument(textDoc, { preview: false });
 
             let docs = ws.textDocuments;
-            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}${this.extensionService.getOsSpecificFileSlash()}${this.options.file}`) > -1; });
+            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { 
+                return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}${this.extensionService.getOsSpecificFileSlash()}${this.options.file}`) > -1; 
+            });
 
             if (activeDoc === undefined) {
                 return;
