@@ -54,11 +54,11 @@ export class Script {
 
         if (this.hasOptions && this.options.file !== "") {
 
-            const textDoc: vscode.TextDocument = await ws.openTextDocument(`${extensionService.getRootDirectory()}/${this.options.file}`);
+            const textDoc: vscode.TextDocument = await ws.openTextDocument(`${extensionService.getRootDirectory()}${this.options.file}`);
             vscode.window.showTextDocument(textDoc, { preview: false });
 
             let docs = ws.textDocuments;
-            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}/${this.options.file}`) > -1; });
+            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}${this.options.file}`) > -1; });
 
             if (activeDoc === undefined) {
                 return;

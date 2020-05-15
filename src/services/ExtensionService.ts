@@ -12,9 +12,7 @@ export class ExtensionService {
     };
 
     public getRootDirectory = (): string => {
-
-        let extensionSettings: ExtensionSettings = new ExtensionSettings();
-
+        
         let ws = vscode.workspace;
         let rootDirectory: string = "";
 
