@@ -22,13 +22,7 @@
 	},
 	"icon": "resources/images/vscode_icon.png",
 	"activationEvents": [
-		"*",
-		"onCommand:livecoder.playAllScripts",
-		"onCommand:livecoder.playNextScript",
-		"onCommand:livecoder.playNextNScripts",
-		"onCommand:livecoder.playRemainingScripts",
-		"onCommand:livecoder.playSpecificScript",
-		"onCommand:livecoder.resetScriptQueue"
+		"*"
 	],
 	"main": "./out/extension.js",
     "contributes": {
