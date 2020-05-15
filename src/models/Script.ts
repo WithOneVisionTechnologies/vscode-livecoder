@@ -1,14 +1,12 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
-import { ScriptOptions } from "./ScriptOptions";
 import { ExtensionSettings } from "./ExtensionSettings";
 import { ExtensionService } from "../services/ExtensionService";
 
 export class Script {
-    public options: ScriptOptions = new ScriptOptions();
     public name: string = "";
+    public path: string = "";
     public content: string = "";
-    public hasOptions: boolean = false;
 
     private extensionService: ExtensionService = new ExtensionService();
 
@@ -19,32 +17,19 @@ export class Script {
             return;
         }
 
-        let scriptPath: string = `${this.extensionService.getFullScriptDirectory()}${this.extensionService.getOsSpecificFileSlash()}${scriptName}`;
-        let fullContent: string = fs.readFileSync(scriptPath, { encoding: "utf-8" });
-        let contentParts: string[] = fullContent.split(/(?:\r\n|\r|\n)\-\-\-(?:\r\n|\r|\n)/m);
-
         try {
-
-            if (contentParts.length === 1) {
-                this.hasOptions = false;
-                this.content = contentParts[0];
-            } else {
-                this.hasOptions = true;
-                this.options.parse(contentParts[0]);
-                this.content = contentParts[1];
-            }
-
             this.name = scriptName;
+            this.path = `${this.extensionService.getFullScriptDirectory()}${this.extensionService.getOsSpecificFileSlash()}${scriptName}`;
+            this.content = fs.readFileSync(this.path, { encoding: "utf-8" });
         }
         catch (e) {
-            vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to parse options in script ${scriptPath}`);
+            vscode.window.showErrorMessage(`Live Coder: Error ${e} while trying to parse the script ${scriptName}`);
             return;
         }
     }
 
     public play = async () => {
 
-        let extensionService: ExtensionService = new ExtensionService();
         let ws = vscode.workspace;
 
         if (ws === undefined) {
@@ -52,146 +37,41 @@ export class Script {
             return;
         }
 
-        if (this.hasOptions && this.options.file !== "") {
+        let editor = vscode.window.activeTextEditor;
 
-            const textDoc: vscode.TextDocument = await ws.openTextDocument(`${extensionService.getRootDirectory()}${this.extensionService.getOsSpecificFileSlash()}${this.options.file}`);
-            vscode.window.showTextDocument(textDoc, { preview: false });
-
-            let docs = ws.textDocuments;
-            let activeDoc: vscode.TextDocument | undefined = docs.find((textDoc: vscode.TextDocument) => { 
-                return textDoc.fileName.indexOf(`${extensionService.getRootDirectory()}${this.extensionService.getOsSpecificFileSlash()}${this.options.file}`) > -1; 
-            });
-
-            if (activeDoc === undefined) {
-                return;
-            }
-
-            vscode.window.showTextDocument(activeDoc).then(() => {
-                let editor = vscode.window.activeTextEditor;
-
-                if (!activeDoc || activeDoc === undefined || !editor || editor === undefined) {
-                    return;
-                }
-
-                this.type(this.content, this.getPosition(editor, activeDoc));
-            });
-        } else {
-            let editor = vscode.window.activeTextEditor;
-
-            if (!editor || editor === undefined) {
-                return;
-            }
-
-            let activeDoc: vscode.TextDocument = editor.document;
-
-            if (!activeDoc || activeDoc === undefined) {
-                return;
-            }
-
-            await this.type(this.content, this.getPosition(editor, activeDoc));
-        }
-    };
-
-    private getPosition = (editor: vscode.TextEditor, document: vscode.TextDocument): vscode.Position => {
-
-        let position: vscode.Position;
-
-        if (this.hasOptions) {
-            let line = this.options.line;
-            let col = this.options.col;
-
-            if (line === -1) {
-                line = editor.selection.active.line;
-            }
-
-            if (line >= editor.document.lineCount) {
-                line = editor.document.lineCount - 1;
-            }
-
-            if (col === -1) {
-                col = editor.selection.active.character;
-            }
-
-            let range = document.lineAt(line).range;
-            editor.selection = new vscode.Selection(range.start, range.end);
-            editor.revealRange(range, this.options.getTextEditorRevealType());
-            position = new vscode.Position(line, col);
-
-        } else {
-            position = editor.selection.active;
+        if (!editor || editor === undefined) {
+            vscode.window.showErrorMessage("Live Coder: No active text editor open");
+            return;
         }
 
-        return position;
+        if (!this.content || this.content.length === 0) {
+            vscode.window.showErrorMessage("Live Coder: No content found inside of script");
+        }
 
+        await this.type(this.content, editor.selection.active);
     };
 
     private type = async (text: string, position: vscode.Position): Promise<void> => {
 
-        if (!text) {
-            return;
-        }
-
-        if (text.length === 0) {
-            return;
-        }
-
         let editor = vscode.window.activeTextEditor;
 
-        if (editor === undefined) {
+        if (!editor || editor === undefined) {
+            vscode.window.showErrorMessage("Live Coder: No active text editor open");
             return;
         }
 
-        let pos: vscode.Position = position;
-        let char: string = text.substring(0, 1);
-
-        if (char === "↓") {
-            pos = new vscode.Position(pos.line + 1, pos.character);
-            char = "";
-        }
-
-        if (char === "↑") {
-            pos = new vscode.Position(pos.line - 1, pos.character);
-            char = "";
-        }
-
-        if (char === "→") {
-            pos = new vscode.Position(pos.line, pos.character + 1);
-            char = "";
-        }
-
-        if (char === "←") {
-            pos = new vscode.Position(pos.line, pos.character - 1);
-            char = "";
-        }
-
-        if (char === "⇤") {
-            pos = new vscode.Position(pos.line, 0);
-            char = "";
-        }
-
-        if (char === "⇥") {
-            pos = editor.document.lineAt(pos.line).range.end;
-            char = "";
-        }
+        let character: string = text.substring(0, 1);
 
         await editor.edit((editBuilder: vscode.TextEditorEdit) => {
 
-            if (char !== "⌫") {
-                editBuilder.insert(pos, char);
-            }
-            else {
-                pos = new vscode.Position(pos.line, pos.character - 1);
-                let selection = new vscode.Selection(pos, pos);
-                editBuilder.delete(selection);
-                char = "";
-            }
+            editBuilder.insert(position, character);
 
-            let newSelection: vscode.Selection = new vscode.Selection(pos, pos);
+            let newSelection: vscode.Selection = new vscode.Selection(position, position);
 
-            if (char === "\n") {
-                newSelection = new vscode.Selection(pos, pos);
-                pos = new vscode.Position(pos.line + 1, 0);
-                char = "";
+            if (character === "\n") {
+                newSelection = new vscode.Selection(position, position);
+                position = new vscode.Position(position.line + 1, 0);
+                character = "";
             }
 
             if (editor !== undefined) {
@@ -201,7 +81,7 @@ export class Script {
 
         let extensionSettings: ExtensionSettings = new ExtensionSettings();
         let typingDelay: number = extensionSettings.typingDelay;
-        let nextPosition = new vscode.Position(pos.line, char.length + pos.character);
+        let nextPosition = new vscode.Position(position.line, character.length + position.character);
 
         if (text.substring(1, text.length) !== "") {
             this.sleep(typingDelay);
