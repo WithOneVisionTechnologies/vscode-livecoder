@@ -2,9 +2,8 @@
 	"name": "livecoder",
 	"displayName": "LiveCoder",
 	"description": "Types out code for you in live coding sessions (forked from 'auto-type')",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"publisher": "with-one-vision",
-	"preview": true,
 	"engines": {
 		"vscode": "^1.45.0"
 	},
