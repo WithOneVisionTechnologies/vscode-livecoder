@@ -1,8 +1,8 @@
 {
 	"name": "livecoder",
 	"displayName": "LiveCoder",
-	"description": "Types out code for you in live coding sessions (forked from 'auto-type')",
-	"version": "1.0.0",
+	"description": "Types out code for you in live coding sessions",
+	"version": "1.0.1",
 	"publisher": "with-one-vision",
 	"engines": {
 		"vscode": "^1.45.0"
@@ -13,7 +13,8 @@
 	"keywords": [
 		"With One Vision",
 		"Live Code",
-		"Auto Type"
+		"Auto Type",
+		"Script Player"
 	],
 	"repository": {
 		"type": "git",
